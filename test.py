@@ -102,7 +102,7 @@ if __name__ == '__main__':
     print('%d Test Acc = %4.2f%% +- %4.2f%%' %(iter_num, acc_mean, 1.96* acc_std/np.sqrt(iter_num)))
 
 
-    with open('./record/results.txt' , 'a') as f:
+    with open('./BSNet/record/results.txt' , 'a') as f:
         timestamp = time.strftime("%Y%m%d-%H%M%S", time.localtime()) 
         aug_str = '-aug' if params.train_aug else ''
 
