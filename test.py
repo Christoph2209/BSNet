@@ -22,7 +22,7 @@ from io_utils import parse_args, get_resume_file, get_best_file
 def feature_evaluation(cl_data_file, model, n_way = 5, n_support = 5, n_query = 15):
     class_list = cl_data_file.keys()
 
-    select_class = random.sample(class_list,n_way)
+    select_class = random.sample(sorted(class_list),n_way)
     z_all  = []
     for cl in select_class:
         img_feat = cl_data_file[cl]
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     print('%d Test Acc = %4.2f%% +- %4.2f%%' %(iter_num, acc_mean, 1.96* acc_std/np.sqrt(iter_num)))
 
 
-    with open('./record/results.txt' , 'a') as f:
+    with open('./BSNet/record/results.txt' , 'a') as f:
         timestamp = time.strftime("%Y%m%d-%H%M%S", time.localtime()) 
         aug_str = '-aug' if params.train_aug else ''
 
