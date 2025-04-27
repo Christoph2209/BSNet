@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
@@ -24,9 +25,10 @@ def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch,
 
     max_acc = 0       
 
+    metrics_per_epoch = []
     for epoch in range(start_epoch,stop_epoch):
         model.train()
-        model.train_loop(epoch, base_loader,  optimizer ) #model are called by reference, no need to return 
+        epoch_loss = model.train_loop(epoch, base_loader,  optimizer ) #model are called by reference, no need to return 
         model.eval()
 
         if not os.path.isdir(params.checkpoint_dir):
@@ -43,6 +45,11 @@ def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch,
         if (epoch % params.save_freq==0) or (epoch==stop_epoch-1):
             outfile = os.path.join(params.checkpoint_dir, '{:d}.tar'.format(epoch))
             torch.save({'epoch':epoch, 'state':model.state_dict()}, outfile)
+
+        metrics_per_epoch.append({"epoch": epoch, "loss": epoch_loss, "accuracy": acc})
+
+    df = pd.DataFrame(metrics_per_epoch)
+    df.to_csv('bsnet_training_metrics.csv', index=False)
 
     return model
 
