@@ -61,7 +61,7 @@ class MetaTemplate(nn.Module):
 
     def train_loop(self, epoch, train_loader, optimizer ):
         print_freq = 10
-
+        p = 0
         avg_loss=0
         for i, (x,_ ) in enumerate(train_loader):
             self.n_query = x.size(1) - self.n_support           
@@ -72,11 +72,11 @@ class MetaTemplate(nn.Module):
             loss.backward()
             optimizer.step()
             avg_loss = avg_loss+loss.item()
-
+            p = i
             if i % print_freq==0:
                 #print(optimizer.state_dict()['param_groups'][0]['lr'])
                 print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f}'.format(epoch, i, len(train_loader), avg_loss/float(i+1)))
-        return avg_loss
+        return avg_loss/float(p+1)
 
     def test_loop(self, test_loader, record = None):
         correct =0
